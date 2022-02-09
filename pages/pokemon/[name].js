@@ -1,18 +1,22 @@
 import axios from "axios";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { Col, Container, Row } from "react-bootstrap";
-import { useQuery } from "react-query";
 
-const getPokemon = async (filter) => {
-  const pokemonName = filter.queryKey[1];
-  const { data } = await axios.get(`/api/pokemon?name=${pokemonName}`);
+const getPokemon = async (name) => {
+  const { data } = await axios.get(
+    `http://localhost:3000/api/pokemon?name=${name}`
+  );
   return data;
 };
 
-export default () => {
-  const router = useRouter();
-  const { data } = useQuery(["name", router.query.name], getPokemon);
+export async function getServerSideProps(context) {
+  const data = await getPokemon(context.params.name);
+  return {
+    props: { data },
+  };
+}
+
+export default ({ data }) => {
   return (
     <div>
       <Head>
