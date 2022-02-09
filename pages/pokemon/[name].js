@@ -1,22 +1,26 @@
-import axios from "axios";
 import Head from "next/head";
 import { Col, Container, Row } from "react-bootstrap";
+import pokemon from "../../pokemon.json";
+export async function getStaticPaths() {
+  const paths = pokemon.map(({ name: { english } }) => ({
+    params: { name: english },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
+}
 
-const getPokemon = async (name) => {
-  const { data } = await axios.get(
-    `http://localhost:3000/api/pokemon?name=${name}`
+export async function getStaticProps(context) {
+  const data = pokemon.find(
+    ({ name: { english } }) => english === context.params.name
   );
-  return data;
-};
-
-export async function getServerSideProps(context) {
-  const data = await getPokemon(context.params.name);
   return {
     props: { data },
   };
 }
 
-export default ({ data }) => {
+const PokemonDetail = ({ data }) => {
   return (
     <div>
       <Head>
@@ -50,3 +54,4 @@ export default ({ data }) => {
     </div>
   );
 };
+export default PokemonDetail;
