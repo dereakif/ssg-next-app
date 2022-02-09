@@ -1,5 +1,6 @@
 import axios from "axios";
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from "react";
 import { Card, Col, Container, FormControl, Row } from "react-bootstrap";
 import { useQuery } from "react-query";
@@ -36,17 +37,19 @@ export default function Home() {
           <Row>
             {data.map(({ id, name, type, image }) => (
               <Col xs={4} key={id} style={{ padding: 5 }}>
+              <Link href={`/pokemon/${name.english}`}>
                 <Card>
                   <Card.Img
                     variant="top"
                     style={{ maxHeight: 300 }}
                     src={image}
-                  />
+                    />
                   <Card.Body>
                     <Card.Title>{name.english}</Card.Title>
                     <Card.Subtitle>{type.join(", ")}</Card.Subtitle>
                   </Card.Body>
                 </Card>
+                    </Link>
               </Col>
             ))}
           </Row>
